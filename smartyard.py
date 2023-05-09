@@ -18,6 +18,7 @@ from requests.exceptions import HTTPError
 from geopandas.tools import geocode
 from werkzeug.datastructures import ImmutableMultiDict
 import logging, sys
+
 # import pycurl
 import subprocess
 from main import app
@@ -33,6 +34,7 @@ def addressList(*args, **kwargs):
 
 def billingList(*args, **kwargs):
     return []
+
 
 def agrmId(*args, **kwargs):
     return 2
@@ -663,8 +665,12 @@ def address_openDoor():
 
     if doorId == 0:
         print("Real trying open door")
-        response1 = requests.get("http://37.186.117.10:8080/fcgi/do?action=OpenDoor&UserName=admin&Password=admin&DoorNum=1")
-        response = app.response_class(response1.json(), status=204, mimetype="application/json")
+        response1 = requests.get(
+            "http://37.186.117.10:8080/fcgi/do?action=OpenDoor&UserName=admin&Password=admin&DoorNum=1"
+        )
+        response = app.response_class(
+            response1.json(), status=204, mimetype="application/json"
+        )
         return response
 
     if domophoneId == 2 or domophoneId == 4:
@@ -2059,5 +2065,6 @@ def not_found(error):
 
 
 if __name__ == "__main__":
-    # app.run(debug=True, host="0.0.0.0")
-    app.run(debug=True, host="172.24.144.1")
+    app.run(
+        debug=True, host=os.getenv("LAUNCH_IP"), port=os.getenv("LAUNCH_PORT", 5000)
+    )
